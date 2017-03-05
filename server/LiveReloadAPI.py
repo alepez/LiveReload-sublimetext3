@@ -11,7 +11,7 @@ except ValueError:
 from functools import wraps
 
 def log(msg):
-  print(msg)
+  # print(msg)
 
 class LiveReloadAPI(object):
 
