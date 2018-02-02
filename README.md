@@ -57,13 +57,18 @@ sudo gem install sass
 ```
 Activate the plugin in SublimeText3 via the `package settings -> livereload -> plugins -> enable/disable plugins` menu
 
-By default, the plugin save the compiled css in same dir of sources.
-You can change this by creating a `sass_config.json` file near your sources:
+### Configuration
+
+You can create a `sass_config.json` file in your root SASS sources
 ```json
 {
-    "destination_dir": "../../webroot/css"
+    "destination_dir": "../../webroot/css",
+    "main_css": "app.scss"
 }
 ```
+
+* **destination_dir**: by default, sources are compiled in same dir. You can set here your compiled destination dir
+* **main_css**: when you import sub-scss, sass will compile this main scss file instead of you current sub-scss file.
 
 # Plug-in api
 
