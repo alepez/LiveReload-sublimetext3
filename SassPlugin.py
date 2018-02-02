@@ -33,11 +33,26 @@ class SassThread(threading.Thread):
         # default config
         self.config = json.load(open(os.path.join(sublime.packages_path(),'LiveReload','SassPlugin.sublime-settings')))
 
-        # check for local config
-        localConfigFile = os.path.join(self.dirname, "sass_config.json");
-        if os.path.isfile(localConfigFile):
-            localConfig = json.load(open(localConfigFile))
-            self.config.update(localConfig)
+        # config dir
+        self.configDir = self.dirname
+
+        # check for local config in 5 parent dirs
+        pathList = self.dirname.split('/')
+        for i in range(5):
+            configDir = '/'.join(pathList[:len(pathList)-i])
+            if configDir == '':
+                break
+            localConfigFile = os.path.join(configDir, "sass_config.json");
+
+            if os.path.isfile(localConfigFile):
+                # load local config
+                localConfig = json.load(open(localConfigFile))
+                self.config.update(localConfig)
+
+                # store config dir
+                self.configDir = configDir
+                print('[LiveReload Sass] local config: ' + localConfigFile)
+                break
 
         try:
             self.command = self.getLocalOverride.get('command') or 'sass --update --stop-on-error --no-cache --sourcemap=none'
@@ -62,10 +77,17 @@ class SassThread(threading.Thread):
             return {}
 
     def run(self):
+        # Which file to compile ?
+        if self.config['main_css'] is not None:
+            source = os.path.join(self.configDir, self.config['main_css'])
+        else:
+            source = os.path.join(self.dirname, self.filename)
 
-        source = os.path.join(self.dirname, self.filename)
+        # Destination Dir
         destinationDir = self.dirname if self.config['destination_dir'] is None else self.config['destination_dir']
-        destination = os.path.abspath(os.path.join(self.dirname, destinationDir, re.sub("\.(sass|scss)", '.css', self.filename)))
+
+        # Destination file
+        destination = os.path.abspath(os.path.join(os.path.dirname(source), destinationDir, re.sub("\.(sass|scss)", '.css', os.path.basename(source))))
 
         cmd = self.command + ' "' + source + '":"' + destination + '"'
 
