@@ -32,3 +32,27 @@ class LiveReloadEnablePluginCommand(sublime_plugin.ApplicationCommand):
     def run(self):
         sublime.active_window().show_quick_panel(LiveReload.Plugin.listPlugins(),
                 self.on_done)
+
+
+class LiveReloadConfigPluginCommand(sublime_plugin.ApplicationCommand):
+    def run(self, plugin=None, operation="noop"):
+        if not isinstance(plugin, str):
+            return
+
+        plugin_names = [p.__name__ for p in LiveReload.Plugin.plugins]
+        # print("Available plugins: ", plugin_names)
+
+        try:
+            index = plugin_names.index(plugin)
+        except ValueError:
+            sublime.error_message("Plugin not found: " + plugin)
+            return
+
+        p = LiveReload.Plugin.getPlugin(plugin)
+
+        if (
+            operation == "toggle"
+            or (operation == "enable" and not p.isEnabled)
+            or (operation == "disable" and p.isEnabled)
+        ):
+            LiveReload.Plugin.togglePlugin(index)
