@@ -1,3 +1,15 @@
+## ⚠️ Repository Archived
+
+This repository is no longer maintained and has been archived.
+
+I originally forked this project after it was abandoned over 10 years ago, but I have not used or updated it in many years. See https://github.com/alepez/LiveReload-sublimetext3/issues/10
+
+**No further updates, bug fixes, or support will be provided.**
+
+If you are interested in continuing development, feel free to fork the repository.
+
+Thank you for your understanding.
+
 # LiveReload for Sublime Text 3
 
 A web browser page reloading plugin for the [Sublime Text 3](http://sublimetext.com "Sublime Text 3") editor.
